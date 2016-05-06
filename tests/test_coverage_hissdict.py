@@ -10,18 +10,26 @@ if hexversion < 0x03000000:
 
 def test_init():
     temp = HissDict()
+    assert temp._container_size == 8
 
 def test_init_args():
     temp = HissDict([('a', 1), ('b', 2)])
-    assert len(temp) == 2
     assert temp['a'] == 1
     assert temp['b'] == 2
 
 def test_init_kwargs():
     temp = HissDict(a=1, b=2)
-    assert len(temp) == 2
     assert temp['a'] == 1
     assert temp['b'] == 2
+
+def test_len():
+    temp = HissDict([('a', 1), ('b', 2)])
+    assert temp.__len__() == 2
+    temp['c'] = 3
+    assert temp.__len__() == 3
+    ##won't work until del method works properly
+    # del temp['a']
+    # assert temp.__len__() == 2
 
 if __name__ == '__main__':
     import nose
