@@ -21,10 +21,13 @@ class HissDict(MutableMapping):
         for key, value in temp.iteritems():
             self[key] = value   #calls __setitem__
 
-    def __setitem__(self, key, value):
+    def create_index(self, key):
         hash_key = hash(key)
         index = hash_key % len(self._keys)
+        return index
 
+    def __setitem__(self, key, value):
+        index = self.create_index(key)
         #increment to find an empty bucket or duplicate key
         while self._keys[index] is not None: #or self._keys[index] != key:
             index += 1
@@ -34,15 +37,13 @@ class HissDict(MutableMapping):
         self._len += 1
 
     def __getitem__(self, key):
-        hash_key = hash(key)
-        index = hash_key % len(self._keys)
+        index = self.create_index(key)
         while self._keys[index] is not None or self._keys[index] != key:
             index += 1
         return self._keys[index]
 
     def __delitem__(self, key):
-        hash_key = hash(key)
-        index = hash_key % len(self._keys)
+        index = self.create_index(key)
         while self._keys[index] is not None or self._keys[index] != key:
             index += 1
         self._keys[index] = None
@@ -62,4 +63,3 @@ class HissDict(MutableMapping):
         """Return a String representation of the HissDict contents"""
         kvs = ["{key}: {value}".format(key=key, value=value) for key, value in zip(self._keys, self._values)]
         return ", ".join(kvs)
-

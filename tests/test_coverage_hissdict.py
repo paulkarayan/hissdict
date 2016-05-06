@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from nose.tools import raises
 from sys import hexversion
 from context import hissdict
 from hissdict import HissDict
-import string
 
 if hexversion < 0x03000000:
     range = xrange
@@ -54,6 +52,10 @@ def test_str():
     temp = HissDict(mapping)
     assert isinstance(temp.__str__(), str)
     ##todo: better way to assert the contents are there without using a hardcoded string? esp. since order preservation is not guaranteed
+
+def test_create_index():
+    temp = HissDict([('a', 1)])
+    assert temp.create_index('a') <= temp._len
 
 if __name__ == '__main__':
     import nose
