@@ -9,7 +9,23 @@ the CPython builtin dict.
 
 See: https://docs.python.org/3/library/collections.abc.html
 
-### use example goes here ###
+Use Example(s):
+>>> from hissdict import HissDict
+>>> hd = HissDict([('New York', 'Albany'), ('California', 'Sacramento')])
+>>> california_capital = hd.get('California')
+>>> print california_capital
+Sacramento
+>>>
+>>> del hd["New York"]
+>>> hd["North Carolina"] = "Raleigh"
+>>> print hd.__str__()
+{New York: Albany, California: Sacramento}
+>>>
+>>> for state in iter(hd):
+...     print state
+...
+California
+North Carolina
 
 Inspired by Grant "Sir Hiss" Jenks and his excellent SortedContainers project.
 

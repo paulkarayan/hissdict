@@ -4,7 +4,23 @@ HissDict - a pure-Python Dictionary implementation
 provides the same methods as the CPython dict, but with
 a pure-Python implementation based on Collections' Abstract Base Classes
 
-###use examples will go here###
+Use Example(s):
+>>> from hissdict import HissDict
+>>> hd = HissDict([('New York', 'Albany'), ('California', 'Sacramento')])
+>>> california_capital = hd.get('California')
+>>> print california_capital
+Sacramento
+>>>
+>>> del hd["New York"]
+>>> hd["North Carolina"] = "Raleigh"
+>>> print hd.__str__()
+{New York: Albany, California: Sacramento}
+>>>
+>>> for state in iter(hd):
+...     print state
+...
+California
+North Carolina
 """
 
 from collections import MutableMapping
@@ -56,6 +72,6 @@ class HissDict(MutableMapping):
 
     def __str__(self):
         """Return a String representation of the HissDict contents"""
-        kvs = ["{key}: {value}".format(key=key, value=value) for key, value in zip(self._keys, self._values)]
-        return ", ".join(kvs)
+        kvs = ["{key}: {value}".format(key=key, value=value) for key, value in zip(self._keys, self._values) if key != None]
+        return "{" + ", ".join(kvs) + "}"
 
