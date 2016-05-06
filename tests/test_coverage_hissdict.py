@@ -26,7 +26,7 @@ def test_delitem():
     mapping = [(val, pos) for pos, val in enumerate('abc')]
     temp = HissDict(mapping)
     del temp['a']
-    assert temp.__len__() == 3
+    assert temp.__len__() == 2
 
 def test_getitem():
     mapping = [(val, pos) for pos, val in enumerate('abc')]
@@ -38,9 +38,8 @@ def test_len():
     assert temp.__len__() == 2
     temp['c'] = 3
     assert temp.__len__() == 3
-    ##remove until del works
-    #del temp['a']
-    #assert temp.__len__() == 2
+    del temp['a']
+    assert temp.__len__() == 2
 
 def test_iter():
     mapping = [(val, pos) for pos, val in enumerate('abc')]
@@ -56,6 +55,15 @@ def test_str():
 def test_create_index():
     temp = HissDict([('a', 1)])
     assert temp.create_index('a') <= temp._len
+
+def test_index_wraparound():
+    #use a 8 item input to max out size of dictionary.
+    #it is very unlikely that we will not have had to wrap around
+    #to fit everything.
+    #todo: is there a better way to ensure we had a wrap around event?
+    temp = HissDict((val, pos) for pos, val in enumerate('abcefghi'))
+    assert None not in temp._keys
+
 
 if __name__ == '__main__':
     import nose
