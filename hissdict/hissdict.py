@@ -61,5 +61,5 @@ class HissDict(MutableMapping):
     def __str__(self):
         """Return a String representation of the HissDict contents"""
         kvs = ["{key}: {value}".format(key=key, value=value) for key, value in zip(self._keys, self._values)]
-        return kvs
+        return ", ".join(kvs)
 

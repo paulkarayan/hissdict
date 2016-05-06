@@ -11,7 +11,7 @@ project.
 
 TODO
 =================================================
-0. Write tests for existing methods
+0. Write tests for existing methods [done]
 1. Add _len attribute to track length as we add key, value pairs. [done]
 2. Handle IndexError while iterating to wrap-around. (use modulo)
 3. If mapping gets too "full" remap to larger keys and values list.
