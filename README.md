@@ -13,12 +13,12 @@ TODO
 =================================================
 0. Write tests for existing methods [done]
 1. Add _len attribute to track length as we add key, value pairs. [done]
-2. Handle IndexError while iterating to wrap-around. (use modulo)
+2. Handle IndexError while iterating to wrap-around. (use modulo) [done]
 3. If mapping gets too "full" remap to larger keys and values list.
 4. If mapping gets too "sparse" remap to smaller keys and values list.
 5. Performance testing - comparison against CPython dict implementation
 6. Create use example for readme, init, and sample.py
-7. _check to test invariants
+7. (optional) _check to test invariants
 8.(optional) setup for Pypi and add other niceties including:
     a. requirements.txt
     b. tox.ini
