@@ -24,6 +24,6 @@ __author__ = 'Paul Karayan, Grant Jenks'
 __license__ = 'Apache 2.0'
 __copyright__ = 'Copyright 2016 Paul Karayan, Grant Jenks'
 
-from .hissdict import HissDict
+from hissdict import HissDict
 
 __all__ = ['HissDict',]
