@@ -59,15 +59,17 @@ def test_create_index():
     temp = HissDict([('a', 1)])
     assert temp.create_index('a') <= temp._len
 
-def test_index_wraparound():
-    #use a 8 item input to max out size of dictionary.
-    #it is very unlikely that we will not have had to wrap around
-    #to fit everything.
-    #todo: is there a better way to ensure we had a wrap around event?
-    temp = HissDict((val, pos) for pos, val in enumerate('abcefghi'))
-    assert None not in temp._keys
+# #test removed - not sure if there is a better way to test this now
+# #that the HissDict expands?
+# def test_index_wraparound():
+#     #use a 8 item input to max out size of dictionary.
+#     #it is very unlikely that we will not have had to wrap around
+#     #to fit everything.
+#     #todo: is there a better way to ensure we had a wrap around event?
+#     temp = HissDict((val, pos) for pos, val in enumerate('abcefghi'))
+#     assert None not in temp._keys
 
-#HissDict stalls even with: @timed(.5)
+#Before feature implementation, HissDict stalls even with: @timed(.5)
 def test_container_expansion():
     #initial test: just check if you can add 26 values (when you start with
     #8 buckets) and that an expansion happened
