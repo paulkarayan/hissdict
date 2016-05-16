@@ -34,7 +34,9 @@ class HissDict(MutableMapping):
         self._keys = [None]* (2 ** self._buckets)
         self._values = [None] * (2 ** self._buckets)
         #Fraction of buckets that are full before increasing allocation to 2^n+1
-        self._sparsity_value = 0.5
+        self._upper_sparsity_value = 0.5
+        #The lower end sparsity value is smaller to avoid expensive contractions with small numbers of deletes
+        self._lower_sparsity_value = 0.2
         self._len = 0
         self._container_size = len(self._keys)
         #keep internal container utilization log for (possible) later tests
@@ -52,7 +54,7 @@ class HissDict(MutableMapping):
         return index
 
     def __setitem__(self, key, value):
-        self.check_expand_container_size(key, value)
+        self.check_appropriate_container_size(key, value)
 
         index = self.create_index(key)
         self._keys[index] = key
@@ -69,6 +71,8 @@ class HissDict(MutableMapping):
         self._values[index] = None
         self._len -= 1
 
+        self.check_appropriate_container_size(key, value=None)
+
     def __iter__(self):
         for key in self._keys:
             if key is not None:
@@ -83,31 +87,41 @@ class HissDict(MutableMapping):
         kvs = ["{key}: {value}".format(key=key, value=value) for key, value in zip(self._keys, self._values) if key != None]
         return "{" + ", ".join(kvs) + "}"
 
-    def check_expand_container_size(self, key, value):
-        """Expands the container size if utilization >= sparsity value so we can have arbitarily large HissDicts"""
+    def check_appropriate_container_size(self, key, value):
+        """Expands or Contracts the container size to optimize utilization"""
         self._container_utilization = self._len / self._container_size
-        if self._container_utilization >= self._sparsity_value:
-            #logging internal container utilization log for (possible) later tests
-            self._expansion_log.append({
+
+        log_item_template = {
                 "key": key,
                 "value": value,
                 "container_utilization":  self._container_utilization,
                 "current_entries": self._len,
                 "container_size": self._container_size,
-            })
+            }
 
-            #we could just append more None values, but this would
-            #not distribute the items evenly (optional: could test if this matters...)
-            temp = self
+        if self._container_utilization >= self._upper_sparsity_value:
+            #logging internal container utililization
+            log_item_template["type"] = "expansion"
+            self._expansion_log.append(log_item_template)
             self._buckets += 1
-            self._keys = [None]* (2 ** self._buckets)
-            self._values = [None] * (2 ** self._buckets)
+            self.alter_container_size()
 
-            for key, value in self:
-                self[key] = value
-
-            #update previous container size value
-            self._container_size = len(self._keys)
+        elif self._container_utilization < self._lower_sparsity_value:
+            pass
 
         else:
             return
+
+    def alter_container_size(self):
+        #we could just append more None values, but this would
+        #not distribute the items evenly (optional: could test if this matters...)
+        temp = self
+        self._keys = [None]* (2 ** self._buckets)
+        self._values = [None] * (2 ** self._buckets)
+
+        for key, value in self:
+            self[key] = value
+
+        #update previous container size value
+        self._container_size = len(self._keys)
+

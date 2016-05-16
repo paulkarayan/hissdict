@@ -77,6 +77,8 @@ def test_container_expansion():
     assert temp._container_size != 8
     #if expansion happened, it should be logged (thus log not empty)
     assert temp._expansion_log
+    #should log three expansions (8, 16, 32) to handle 26 keys at 50% util
+    assert len(temp._expansion_log) == 3
 
 def test_container_contraction():
     mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
