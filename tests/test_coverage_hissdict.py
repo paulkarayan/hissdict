@@ -3,6 +3,9 @@
 from sys import hexversion
 from context import hissdict
 from hissdict import HissDict
+import string
+from nose.tools import timed
+import time
 
 if hexversion < 0x03000000:
     range = xrange
@@ -64,6 +67,13 @@ def test_index_wraparound():
     temp = HissDict((val, pos) for pos, val in enumerate('abcefghi'))
     assert None not in temp._keys
 
+#HissDict stalls even with: @timed(.5)
+def test_expand_container():
+    #initial test: just check if you can add 26 values (when you start with
+    #8 buckets) and that an expansion happened
+    mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
+    temp = HissDict(mapping)
+    # assert temp._container_size != 8
 
 if __name__ == '__main__':
     import nose

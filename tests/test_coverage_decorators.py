@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
-from context import counting
+
 from counting import function_call_counter
 
-@function_call_counter()
-def foo():
-    return
-def test_init():
-    temp = HissDict()
-    assert temp._container_size == 8
 
+def test_func_counting():
+    @function_call_counter
+    def foo(x):
+        return x
 
+    def bar(x):
+        foo(x)
+        foo(x)
+
+    bar(2)
+    assert foo.calls == 2
 
 if __name__ == '__main__':
     import nose
