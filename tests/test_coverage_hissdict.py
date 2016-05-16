@@ -71,11 +71,12 @@ def test_create_index():
 
 #Before feature implementation, HissDict stalls even with: @timed(.5)
 def test_container_expansion():
-    #initial test: just check if you can add 26 values (when you start with
-    #8 buckets) and that an expansion happened
     mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
     temp = HissDict(mapping)
+    #if expansion happened, the container size shouldn't be initial value
     assert temp._container_size != 8
+    #if expansion happened, it should be logged (thus log not empty)
+    assert temp._expansion_log
 
 if __name__ == '__main__':
     import nose
