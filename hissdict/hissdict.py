@@ -106,14 +106,15 @@ class HissDict(MutableMapping):
             log_item = deepcopy(log_item_template)
             log_item["type"] = "expansion"
             self._expansion_log.append(log_item)
+            self._buckets += 1
             self.alter_container_size()
 
-        # elif self._container_utilization < self._lower_sparsity_value and self._buckets > 3:
-        #     log_item = deepcopy(log_item_template)
-        #     log_item["type"] = "contraction"
-        #     self._expansion_log.append(log_item_template)
-        #     self._buckets -= 1
-        #     self.alter_container_size()
+        elif self._container_utilization < self._lower_sparsity_value and self._buckets > 3:
+            log_item = deepcopy(log_item_template)
+            log_item["type"] = "contraction"
+            self._expansion_log.append(log_item)
+            self._buckets -= 1
+            self.alter_container_size()
 
         else:
             return
@@ -126,7 +127,6 @@ class HissDict(MutableMapping):
         temp_keys = deepcopy(self._keys)
         temp_values = deepcopy(self._values)
         temp_len = deepcopy(self._len)
-        self._buckets += 1
 
         self._keys = [None]* (2 ** self._buckets)
         self._values = [None] * (2 ** self._buckets)

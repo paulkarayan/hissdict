@@ -91,7 +91,10 @@ def test_container_contraction():
     for key in temp.__iter__():
         if key not in ['a','b','c']:
             del temp[key]
+    assert temp._container_size == 16
 
+    del temp['a']
+    del temp['b']
     #bottoms out at 8
     assert temp._container_size == 8
 
