@@ -78,6 +78,20 @@ def test_container_expansion():
     #if expansion happened, it should be logged (thus log not empty)
     assert temp._expansion_log
 
+def test_container_contraction():
+    mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
+    temp = HissDict(mapping)
+
+    #delete down to just three items
+    for key in temp.__iter__():
+        if key not in ['a','b','c']:
+            del temp[key]
+
+    #bottoms out at 8
+    assert temp._container_size == 8
+
+
+
 if __name__ == '__main__':
     import nose
     nose.main()
