@@ -25,6 +25,7 @@ North Carolina
 
 from __future__ import division
 from collections import MutableMapping
+from copy import deepcopy
 
 class HissDict(MutableMapping):
 
@@ -101,13 +102,18 @@ class HissDict(MutableMapping):
 
         if self._container_utilization >= self._upper_sparsity_value:
             #logging internal container utililization
-            log_item_template["type"] = "expansion"
+            log_item = deepcopy(log_item_template)
+            log_item["type"] = "expansion"
             self._expansion_log.append(log_item_template)
             self._buckets += 1
             self.alter_container_size()
 
-        elif self._container_utilization < self._lower_sparsity_value:
-            pass
+        # elif self._container_utilization < self._lower_sparsity_value and self._buckets > 3:
+        #     log_item = deepcopy(log_item_template)
+        #     log_item["type"] = "contraction"
+        #     self._expansion_log.append(log_item_template)
+        #     self._buckets -= 1
+        #     self.alter_container_size()
 
         else:
             return
@@ -115,12 +121,19 @@ class HissDict(MutableMapping):
     def alter_container_size(self):
         #we could just append more None values, but this would
         #not distribute the items evenly (optional: could test if this matters...)
-        temp = self
+
+        #remember we can't just set this to temp vars, they'll be superficial!
+        temp_keys = deepcopy(self._keys)
+        temp_values = deepcopy(self._values)
+        #inherited from Mapping :P
+        self.clear()
+
         self._keys = [None]* (2 ** self._buckets)
         self._values = [None] * (2 ** self._buckets)
 
-        for key, value in self:
-            self[key] = value
+        for key, value in zip(temp_keys, temp_values):
+            if key != None:
+                self.__setitem__(key, value)
 
         #update previous container size value
         self._container_size = len(self._keys)

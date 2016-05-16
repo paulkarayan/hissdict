@@ -73,6 +73,9 @@ def test_create_index():
 def test_container_expansion():
     mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
     temp = HissDict(mapping)
+    #should have 26 items in the dict (!!!)
+    #todo: assert that the same k/v pairs exist as they should
+    assert temp.__len__() == 26
     #if expansion happened, the container size shouldn't be initial value
     assert temp._container_size != 8
     #if expansion happened, it should be logged (thus log not empty)
