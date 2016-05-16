@@ -35,8 +35,8 @@ project.
     b. Compare Init, Get, Set, Del, Iter, Set existing  (see: http://www.grantjenks.com/docs/sortedcontainers/performance.html)
 * (optional) _check to test invariants
 * (optional) setup for Pypi and add other niceties including:
-    a. requirements.txt
-    b. tox.ini
-    c. Makefile
-    d. setup.py
-    e. TravisCI
+    1. requirements.txt
+    2. tox.ini
+    3. Makefile
+    4. setup.py
+    5. TravisCI
