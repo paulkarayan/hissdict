@@ -62,6 +62,7 @@ class HissDict(MutableMapping):
         self._values[index] = value
         self._len += 1
 
+
     def __getitem__(self, key):
         index = self.create_index(key)
         return self._values[index]
@@ -85,7 +86,7 @@ class HissDict(MutableMapping):
 
     def __str__(self):
         """Return a String representation of the HissDict contents"""
-        kvs = ["{key}: {value}".format(key=key, value=value) for key, value in zip(self._keys, self._values) if key != None]
+        kvs = ["{key}: {value}".format(key=key, value=self.__getitem__(key))    for key in self.__iter__()]
         return "{" + ", ".join(kvs) + "}"
 
     def check_appropriate_container_size(self, key, value):
@@ -104,8 +105,7 @@ class HissDict(MutableMapping):
             #logging internal container utililization
             log_item = deepcopy(log_item_template)
             log_item["type"] = "expansion"
-            self._expansion_log.append(log_item_template)
-            self._buckets += 1
+            self._expansion_log.append(log_item)
             self.alter_container_size()
 
         # elif self._container_utilization < self._lower_sparsity_value and self._buckets > 3:
@@ -125,16 +125,18 @@ class HissDict(MutableMapping):
         #remember we can't just set this to temp vars, they'll be superficial!
         temp_keys = deepcopy(self._keys)
         temp_values = deepcopy(self._values)
-        #inherited from Mapping :P
-        self.clear()
+        temp_len = deepcopy(self._len)
+        self._buckets += 1
 
         self._keys = [None]* (2 ** self._buckets)
         self._values = [None] * (2 ** self._buckets)
+
+        #update previous container size value
+        self._container_size = len(self._keys)
+
 
         for key, value in zip(temp_keys, temp_values):
             if key != None:
                 self.__setitem__(key, value)
 
-        #update previous container size value
-        self._container_size = len(self._keys)
-
+        self._len = temp_len

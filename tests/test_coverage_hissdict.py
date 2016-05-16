@@ -26,15 +26,17 @@ def test_init_kwargs():
     assert temp['b'] == 2
 
 def test_delitem():
-    mapping = [(val, pos) for pos, val in enumerate('abc')]
+    mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
     temp = HissDict(mapping)
-    del temp['a']
-    assert temp.__len__() == 2
+    for key in temp.__iter__():
+        if key not in ['a','b','c']:
+            del temp[key]
+    assert temp.__len__() == 3
 
 def test_getitem():
-    mapping = [(val, pos) for pos, val in enumerate('abc')]
+    mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
     temp = HissDict(mapping)
-    assert all((temp[val] == pos) for pos, val in enumerate('abc'))
+    assert all((temp[val] == pos) for pos, val in enumerate(string.ascii_lowercase))
 
 def test_len():
     temp = HissDict([('a', 1), ('b', 2)])
@@ -45,15 +47,14 @@ def test_len():
     assert temp.__len__() == 2
 
 def test_iter():
-    mapping = [(val, pos) for pos, val in enumerate('abc')]
+    mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
     temp = HissDict(mapping)
-    assert [key in 'abc' for key in temp._keys if key != None]
+    assert [key in string.ascii_lowercase for key in temp._keys if key != None]
 
 def test_str():
-    mapping = [(val, pos) for pos, val in enumerate('abc')]
+    mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
     temp = HissDict(mapping)
     assert isinstance(temp.__str__(), str)
-    ##todo: better way to assert the contents are there without using a hardcoded string? esp. since order preservation is not guaranteed
 
 def test_create_index():
     temp = HissDict([('a', 1)])
@@ -73,15 +74,14 @@ def test_create_index():
 def test_container_expansion():
     mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
     temp = HissDict(mapping)
-    #should have 26 items in the dict (!!!)
-    #todo: assert that the same k/v pairs exist as they should
-    assert temp.__len__() == 26
+    #should have 26 items in the dict
+    assert temp.__len__() == 26, (temp._expansion_log, temp.__len__())
     #if expansion happened, the container size shouldn't be initial value
     assert temp._container_size != 8
     #if expansion happened, it should be logged (thus log not empty)
     assert temp._expansion_log
     #should log three expansions (8, 16, 32) to handle 26 keys at 50% util
-    assert len(temp._expansion_log) == 3
+    assert len(temp._expansion_log) == 3, (temp._expansion_log, len(temp._expansion_log))
 
 def test_container_contraction():
     mapping = [(val, pos) for pos, val in enumerate(string.ascii_lowercase)]
