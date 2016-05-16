@@ -52,7 +52,7 @@ class HissDict(MutableMapping):
         return index
 
     def __setitem__(self, key, value):
-        self.expand_container_size(key, value)
+        self.check_expand_container_size(key, value)
 
         index = self.create_index(key)
         self._keys[index] = key
@@ -83,11 +83,12 @@ class HissDict(MutableMapping):
         kvs = ["{key}: {value}".format(key=key, value=value) for key, value in zip(self._keys, self._values) if key != None]
         return "{" + ", ".join(kvs) + "}"
 
-    def expand_container_size(self, key, value):
+    def check_expand_container_size(self, key, value):
         """Expands the container size if utilization >= sparsity value so we can have arbitarily large HissDicts"""
         self._container_utilization = self._len / self._container_size
         if self._container_utilization >= self._sparsity_value:
-             self._expansion_log.append({
+            #logging internal container utilization log for (possible) later tests
+            self._expansion_log.append({
                 "key": key,
                 "value": value,
                 "container_utilization":  self._container_utilization,
@@ -95,3 +96,18 @@ class HissDict(MutableMapping):
                 "container_size": self._container_size,
             })
 
+            #we could just append more None values, but this would
+            #not distribute the items evenly (optional: could test if this matters...)
+            temp = self
+            self._buckets += 1
+            self._keys = [None]* (2 ** self._buckets)
+            self._values = [None] * (2 ** self._buckets)
+
+            for key, value in self:
+                self[key] = value
+
+            #update previous container size value
+            self._container_size = len(self._keys)
+
+        else:
+            return
