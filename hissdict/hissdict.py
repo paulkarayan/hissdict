@@ -31,6 +31,8 @@ class HissDict(MutableMapping):
         temp = dict(*args, **kwargs)
         self._keys = [None]*8
         self._values = [None]*8
+        #Fraction of buckets that are full before increasing allocation to 2^n+1
+        self._sparsity_value = 0.5
         self._len = 0
         self._container_size = len(self._keys)
 
