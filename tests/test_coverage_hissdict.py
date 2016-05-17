@@ -1,14 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from sys import hexversion
 from context import hissdict
 from hissdict import HissDict
 import string
-from nose.tools import timed
-import time
-
-if hexversion < 0x03000000:
-    range = xrange
 
 def test_init():
     temp = HissDict()
