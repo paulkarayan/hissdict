@@ -28,11 +28,7 @@ Inspired by Grant "Sir Hiss" Jenks (@grantjenks) and his excellent [SortedContai
 project.
 
 ## TODOs
-* If mapping gets too "full" remap to larger keys and values list.
-* If mapping gets too "sparse" remap to smaller keys and values list.
-* Performance testing - benchmarking against CPython dict implementation
-    a. Count number of collisions at different sizes / sparsity constants
-    b. Compare Init, Get, Set, Del, Iter, Set existing  (see: http://www.grantjenks.com/docs/sortedcontainers/performance.html)
+* (optional) Count number of collisions at different sizes / sparsity constants
 * (optional) _check to test invariants
 * (optional) setup for Pypi and add other niceties including:
     1. requirements.txt
