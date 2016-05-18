@@ -30,7 +30,7 @@ project.
 ## Performance tests
 Note that HissDict stopped responding on my local machine as the number of items increased, which you'll see by missing data points. So, some profiling and additional investigation is in order. 
 
-
+![performance testing charts](https://github.com/paulkarayan/hissdict/blob/master/perf_charts.png)
 
 ## TODOs
 * (optional) Count number of collisions at different sizes / sparsity constants
